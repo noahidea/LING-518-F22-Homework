@@ -1,0 +1,68 @@
+---
+title: 'Tidy R exercise: RMarkdown'
+author: "Márton Sóskuthy"
+date: "13/09/2022"
+output:
+  html_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## What is this?
+
+An R Markdown document! It allows you to combine text with code (and code outputs, e.g. images), format your text in *specific* _ways_, and create an HTML / PDF or even Word output. From now on, you'll be working with R Markdown documents mostly!
+
+Below is what we call a code chunk. It has some R code in it. You can run that code the same way you would run it in a script: by pressing Ctrl / Cmd + Enter (or the little play button in the top right corner -- though that will always execute the entire chunk, which you may not want to do).
+
+```{r}
+library(tidyverse)
+library(readxl)
+```
+
+## Loading the data
+
+Here is something pretty magical. When you work with R Markdown documents, RStudio automatically figures out where your R Markdown file is, and all paths that you enter are relative to that. Simply put: if your data files are iun the "data/lit_sheets_uniform" subfolder of the folder containing your R Markdown file, this is all you need to do to load it:
+
+```{r}
+s3 <- read_excel("data/lit_sheets_uniform/S3.xlsx")
+s5 <- read_csv("data/lit_sheets_uniform/S5.csv")
+s7 <- read_csv("data/lit_sheets_uniform/S7.csv")
+s9 <- read_csv("data/lit_sheets_uniform/S9.csv")
+colnames(s9) <- tolower(colnames(s9))
+colnames(s9)[4] <- "volume"
+s11 <- read_excel("data/lit_sheets_uniform/S11.xlsx")
+s13 <- read_csv("data/lit_sheets_uniform/S13.csv")
+s17 <- read_csv("data/lit_sheets_uniform/S17.csv")
+s23 <- read_csv("data/lit_sheets_uniform/S23.csv")
+s27 <- read_csv("data/lit_sheets_uniform/S27.csv")
+
+all_s <- bind_rows(s3, s5, s7, s9, s11, s13, s17, s23, s27)
+all_s$recent <- ifelse(all_s$year > 2016, "recent", "older")
+```
+
+## Cross-tabulation
+
+Note that the output of this function will display *below* the code chunk, and not in the console (as it did previously). This behaviour can be changed by going to Preferences > R Markdown > Show output inline for all R Markdown documents and unticking the box. On my computer, I left this option on -- it can be quite handy, especially as the output remains underneath the code chunk until the end of your session.
+
+```{r}
+cat("Regression")
+table(all_s$recent, all_s$regression)
+cat("\nMixed effects")
+table(all_s$recent, all_s$mixed_effects)
+cat("\nBayesian")
+table(all_s$recent, all_s$bayesian)
+cat("\nOpen data")
+table(all_s$recent, all_s$open_data)
+```
+
+## A simple graph to show off R Markdown's abilities
+
+Note that, once again, the plot appears underneath the code, not in the plotting window in the lower right corner (unless you've disabled the inline output option).
+
+```{r}
+ggplot(all_s, aes(x=recent, fill=regression)) +
+  geom_bar(position="fill")
+```
