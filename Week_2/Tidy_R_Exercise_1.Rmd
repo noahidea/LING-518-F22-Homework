@@ -57,7 +57,7 @@ s9_b <- s9 %>%
 (Ex2) Using s9_b, rename the column "ISSUE" to "NUMBER".
 
 ```{r}
-s9_b <- mutate(s9_b,"ISSUE" = "NUMBER")
+s9_b <- rename(s9_b,NUMBER = "ISSUE")
 ```
 
 We now add all the data sets together to form a single data set. This is done using bind_rows(), which simply joins data sets together vertically (i.e. by rows). This only works if the data sets have the same column names and the same data types in each column. For instance, if s7 had a column called "misc" that the other data sets did not, we would get an error message; and if s13 had characters in the issue column instead of numbers, we would also get an error message.

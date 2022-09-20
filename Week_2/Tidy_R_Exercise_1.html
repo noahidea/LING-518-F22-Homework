@@ -470,7 +470,7 @@ turning all letters to uppercase must be…</p>
 <pre class="r"><code>s9_b &lt;- s9 %&gt;%
   rename_with(toupper)</code></pre>
 <p>(Ex2) Using s9_b, rename the column “ISSUE” to “NUMBER”.</p>
-<pre class="r"><code>s9_b &lt;- mutate(s9_b,&quot;ISSUE&quot; = &quot;NUMBER&quot;)</code></pre>
+<pre class="r"><code>s9_b &lt;- rename(s9_b,NUMBER = &quot;ISSUE&quot;)</code></pre>
 <p>We now add all the data sets together to form a single data set. This
 is done using bind_rows(), which simply joins data sets together
 vertically (i.e. by rows). This only works if the data sets have the
