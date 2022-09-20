@@ -3,9 +3,9 @@ title: 'Tidy R exercise: The tidyverse'
 author: "Márton Sóskuthy"
 date: "13/09/2022"
 output:
-  pdf_document: default
-  word_document: default
   html_document: default
+  word_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -85,7 +85,7 @@ Your turn!
 (Ex3) Print a version of all_s with all columns that contain the letter u removed. Hint: two ways to do this: brute force (you find and list the relevant columns); OR there is a function contains(), which you can use as  an argument to select() as if it was a column name. Combined with the minus sign, this function will specify a condition for which columns should be  excluded.
 
 ```{r}
-select(all_s,contains("u"))
+select(all_s,!contains("u"))
 ```
 
 ## Adding new columns

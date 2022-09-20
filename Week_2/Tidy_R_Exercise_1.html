@@ -467,8 +467,8 @@ s9 &lt;- s9 %&gt;%
 <p>(Ex1) Create a copy of “s9” called “s9_b”, and capitalise all the
 column names. Hint: if turning all letters to lowercase is tolower,
 turning all letters to uppercase must be…</p>
-<pre class="r"><code>s9_b &lt;- s9
-names(s9_b) &lt;- toupper(names(s9))</code></pre>
+<pre class="r"><code>s9_b &lt;- s9 %&gt;%
+  rename_with(toupper)</code></pre>
 <p>(Ex2) Using s9_b, rename the column “ISSUE” to “NUMBER”.</p>
 <pre class="r"><code>s9_b &lt;- mutate(s9_b,&quot;ISSUE&quot; = &quot;NUMBER&quot;)</code></pre>
 <p>We now add all the data sets together to form a single data set. This
@@ -510,6 +510,21 @@ list the relevant columns); OR there is a function contains(), which you
 can use as an argument to select() as if it was a column name. Combined
 with the minus sign, this function will specify a condition for which
 columns should be excluded.</p>
+<pre class="r"><code>select(all_s,!contains(&quot;u&quot;))</code></pre>
+<pre><code>## # A tibble: 90 × 6
+##     year title                       regression mixed_effects bayesian open_data
+##    &lt;dbl&gt; &lt;chr&gt;                       &lt;lgl&gt;      &lt;lgl&gt;         &lt;lgl&gt;    &lt;lgl&gt;    
+##  1  2022 Number attraction in verb … FALSE      FALSE         TRUE     TRUE     
+##  2  2022 Boundedness in event cogni… FALSE      TRUE          FALSE    TRUE     
+##  3  2022 Still no evidence for audi… FALSE      TRUE          FALSE    TRUE     
+##  4  2022 Forgetting distractors in … FALSE      FALSE         TRUE     TRUE     
+##  5  2022 What can size tell us abou… FALSE      TRUE          FALSE    TRUE     
+##  6  2012 Polysemy in sentence compr… FALSE      TRUE          FALSE    FALSE    
+##  7  2012 A written word is worth a … FALSE      FALSE         TRUE     FALSE    
+##  8  2012 How pragmatic interpretati… TRUE       FALSE         FALSE    FALSE    
+##  9  2012 The internal structure of … TRUE       FALSE         FALSE    FALSE    
+## 10  2012 How do people produce ungr… FALSE      TRUE          FALSE    FALSE    
+## # … with 80 more rows</code></pre>
 </div>
 <div id="adding-new-columns" class="section level2">
 <h2>Adding new columns</h2>
@@ -522,6 +537,8 @@ function is mutate() (we will discuss ifelse() together):</p>
 paper uses bayesian mixed effects models. Hint: you’ll need to use a
 logical operator on two logical columns here. We looked at these last
 time very briefly… It’s one of the following: &amp;, |, !</p>
+<pre class="r"><code>all_s &lt;- all_s %&gt;%
+  mutate(bayesian_mixed = bayesian &amp; mixed_effects)</code></pre>
 </div>
 <div id="filtering" class="section level2">
 <h2>Filtering</h2>
@@ -534,6 +551,22 @@ so – for simplicity – let’s remove it.</p>
 <p>Your turn:</p>
 <p>(Ex5) Display (not save!) a version of the data set with all papers
 published before 2021 removed.</p>
+<pre class="r"><code>filter(all_s,!(year&lt;2021))</code></pre>
+<pre><code>## # A tibble: 45 × 12
+##    student journal   year volume title authors regression mixed_effects bayesian
+##    &lt;chr&gt;   &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;   &lt;lgl&gt;      &lt;lgl&gt;         &lt;lgl&gt;   
+##  1 S3      Journal…  2022    127 &quot;Num… Margar… FALSE      FALSE         TRUE    
+##  2 S3      Journal…  2022    127 &quot;Bou… Yue Ji… FALSE      TRUE          FALSE   
+##  3 S3      Journal…  2022    127 &quot;Sti… Adam M… FALSE      TRUE          FALSE   
+##  4 S3      Journal…  2022    127 &quot;For… Laura … FALSE      FALSE         TRUE    
+##  5 S3      Journal…  2022    127 &quot;Wha… Bo Yao… FALSE      TRUE          FALSE   
+##  6 S5      journal…  2022     94 &quot;Pro… Jeremy… TRUE       TRUE          TRUE    
+##  7 S5      journal…  2022     94 &quot;Ame… Rachel… TRUE       TRUE          FALSE   
+##  8 S5      journal…  2022     94 &quot;Con… Annika… TRUE       TRUE          FALSE   
+##  9 S5      journal…  2022     94 &quot;Who… Makiko… TRUE       FALSE         FALSE   
+## 10 S5      journal…  2022     94 &quot;The… Christ… TRUE       TRUE          FALSE   
+## # … with 35 more rows, and 3 more variables: open_data &lt;lgl&gt;, recent &lt;chr&gt;,
+## #   bayesian_mixed &lt;lgl&gt;</code></pre>
 </div>
 <div id="grouping-and-summarising" class="section level2">
 <h2>Grouping and summarising</h2>
@@ -554,6 +587,16 @@ both!) of TRUE’s in each group.</p>
 <p>Your turn:</p>
 <p>(Ex6) Do the cross-tabulation for one of the other logical
 variables.</p>
+<pre class="r"><code>all_s %&gt;%
+  group_by(open_data) %&gt;%
+  summarise(n=sum(regression),
+            prop=mean(regression)) %&gt;%
+  ungroup()</code></pre>
+<pre><code>## # A tibble: 2 × 3
+##   open_data     n  prop
+##   &lt;lgl&gt;     &lt;int&gt; &lt;dbl&gt;
+## 1 FALSE        42 0.646
+## 2 TRUE         12 0.5</code></pre>
 </div>
 <div id="homework" class="section level2">
 <h2>Homework</h2>
